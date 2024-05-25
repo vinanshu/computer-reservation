@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+        <div>
+            <div class="colorcode">
+                <p class="EMTcolor">EMT</p>
+                <p class="TCMcolor">TCM</p>
+                <p class="ITcolor">IT</p>
+                <p class="FREE">Free</p> <!-- Fixed the class name here -->
+            </div>
+        </div>
+        <div>
+            <h2>Weekly Schedule</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="EMT">7am-9am <br> EMT 1st year</td>
+                        <td class="TCM">8am-10am <br> TCM 2nd year</td>
+                        <td class="FREE" id="slot1">7am-9am<button onclick="reserve('slot1')">Free</button></td>
+                        <td class="TCM">8am-10am <br> TCM 2nd year</td>
+                        <td class="IT">7am-9am <br> IT 2nd year</td>
+                        <td class="IT">8am-10am <br> IT 2nd year</td>
+                    </tr>
+                    <tr>
+                        <td class="IT">10am-12pm <br> IT 3rd year</td>
+                        <td class="FREE" id="slot2">11am-1pm<button onclick="reserve('slot2')">Free</button></td>
+                        <td class="EMT">10am-12pm <br> EMT 1st year</td>
+                        <td class="IT">11am-1pm<br> IT 2nd year </td>
+                        <td class="FREE" id="slot3">10am-12pm <button onclick="reserve('slot3')">Free</button></td>
+                        <td class="TCM">11am-1pm<br> TCM 1st year</td>
+                    </tr>
+                    <tr>
+                        <td class="FREE" id="slot4">1pm-3pm <button onclick="reserve('slot4')">Free</button></td>
+                        <td class="IT">IT 2nd year<br> 2pm-4pm </td>
+                        <td class="FREE" id="slot5">1pm-3pm<button onclick="reserve('slot5')">Free</button></td>
+                        <td class="FREE" id="slot6">2pm-4pm<button onclick="reserve('slot6')">Free</button></td>
+                        <td class="TCM">1pm-3pm<br> TCM 2nd year</td>
+                        <td class="FREE" id="slot7">2pm-4pm<button onclick="reserve('slot7')">Free</button></td>
+                    </tr>
+                    <tr>
+                        <td class="FREE" id="slot8">4pm-6pm <button onclick="reserve('slot8')">Free</button></td>
+                        <td class="EMT">2pm-4pm <br> EMT 2nd year</td>
+                        <td class="FREE" id="slot9">4pm-6pm<button onclick="reserve('slot9')">Free</button></td>
+                        <td class="EMT">2pm-4pm <br> EMT 2nd year</td>
+                        <td class="FREE" id="slot10">4pm-6pm <button onclick="reserve('slot10')">Free</button></td>
+                        <td class="EMT">2pm-4pm <br> EMT 2nd year</td>
+                    </tr>
+                    <tr>
+                        <td class="EMT">7pm-8pm <br> EMT 2nd year</td>
+                        <td class="FREE" id="slot11">5pm-7pm <button onclick="reserve('slot11')">Free</button></td>
+                        <td class="EMT">6pm-8pm <br> EMT 2nd year</td>
+                        <td class="TCM">5pm-7pm <br> TCM 4th year</td>
+                        <td class="EMT">6pm-8pm <br> EMT 1st year</td>
+                        <td class="FREE" id="slot12">5pm-7pm<button onclick="reserve('slot12')">Free</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="content">
+                <h3 class="text">Click the free button to reserved the slot</h3>
+                <h3><button class="logout" onclick="logout()">Logout</button></h3> <!-- Added the logout function call here -->
+            </div>
+            <div class="footer">
+                <footer></footer>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            // Retrieve existing reservations from localStorage
+            var existingReservations = JSON.parse(localStorage.getItem("reservations")) || {};
+
+            // Loop through each reservation
+            for (var slotId in existingReservations) {
+                if (existingReservations.hasOwnProperty(slotId)) {
+                    var slot = document.getElementById(slotId);
+                    if (slot) {
+                        // Mark the slot as reserved
+                        slot.classList.add("reserved");
+                        // Update the slot content to display reservation details
+                        slot.innerHTML = "Reserved: " + slot.firstChild.nodeValue.trim() + " (ID: " + existingReservations[slotId].idNumber + ")";
+                    }
+                }
+            }
+        };
+
+        // Function to reserve a slot
+        function reserve(slotId) {
+            var slot = document.getElementById(slotId);
+
+            // Check if this slot is already reserved
+            if (slot.classList.contains("reserved")) {
+                alert("This slot is already reserved.");
+                return;
+            }
+
+            // Create the prompt div
+            var promptDiv = document.createElement("div");
+            promptDiv.className = "prompt";
+
+            var firstNameInput = document.createElement("input");
+            firstNameInput.placeholder = "Enter your first name";
+            var lastNameInput = document.createElement("input");
+            lastNameInput.placeholder = "Enter your last name";
+            var idNumberInput = document.createElement("input");
+            idNumberInput.placeholder = "Enter your ID number";
+            var submitButton = document.createElement("button");
+            submitButton.textContent = "Submit";
+
+            promptDiv.appendChild(firstNameInput);
+            promptDiv.appendChild(document.createElement("br"));
+            promptDiv.appendChild(lastNameInput);
+            promptDiv.appendChild(document.createElement("br"));
+            promptDiv.appendChild(idNumberInput);
+            promptDiv.appendChild(document.createElement("br"));
+            promptDiv.appendChild(submitButton);
+
+            document.body.appendChild(promptDiv);
+
+            submitButton.onclick = function () {
+                var firstName = firstNameInput.value;
+                var lastName = lastNameInput.value;
+                var idNumber = idNumberInput.value;
+
+                if (firstName && lastName && idNumber) {
+                    var confirmation = confirm("Confirm reservation?");
+                    if (confirmation) {
+                        var time = slot.firstChild.nodeValue.trim();
+                        slot.classList.add("reserved");
+                        slot.innerHTML = "Reserved: " + time + " (ID: " + idNumber + ")";
+
+                        // Save the reservation to localStorage
+                        var existingReservations = JSON.parse(localStorage.getItem("reservations")) || {};
+                        existingReservations[slotId] = {
+                            idNumber: idNumber
+                        };
+                        localStorage.setItem("reservations", JSON.stringify(existingReservations));
+                    }
+                } else {
+                    alert("Please fill in all the fields.");
+                }
+
+                // Remove the prompt after submission
+                document.body.removeChild(promptDiv);
+            };
+        }
+        function logout() {
+            // Redirect to index.html
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>
